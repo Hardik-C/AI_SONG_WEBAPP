@@ -1,12 +1,16 @@
 music1 = "";
 music2 = "";
+scoreLeftWrist = 0;
+scoreRightWrist = 0;
+
+song_staus1 ="";
+song_staus2 ="";
 
 leftWristX = 0;
 leftWristY = 0;
 
 rightWristX = 0;
 rightWristY = 0;
-
 
 function preload()
 {
@@ -31,11 +35,38 @@ function modelLoaded()
 function draw()
 {
     image(video,0,0,600,500);
+    song_staus1 = music1.isPlaying()
+    fill("#FF0000");
+    stroke("#FF0000");
+    if(scoreLeftWrist > 0.2)
+    {
+       circle(leftWristX,leftWristY,20);
+       music2.stop();
+       if(song_staus1 == false)
+       {
+        music1.play()
+        document.getElementById("updatehtag").innerHTML = "Bing bing boo";
+       }
+    }
+
+    if(scoreRightWrist > 0.2)
+    {
+        circle(rightWristX,rightWristY,20);
+        music1.stop();
+        if(song_staus2 == false)
+        {
+            music2.play();
+            document.getElementById("updatehtag").innerHTML = "Marvel Theme Song";
+        }
+    }
 }
 function gotPoses(results)
 {
     if(results.length > 0)
     {
+        scoreLeftWrist = results[0].pose.keypoints[9].score;
+        scoreRightWrist = results[0].pose.keypoints[10].score;
+        console.log("ScoreRightWrist ="+scoreRightWrist+"ScoreLeftWrist = " + scoreLeftWrist);
         console.log(results);
         leftWristX = results[0].pose.leftWrist.x;
         leftWristY = results[0].pose.leftWrist.y;
@@ -45,6 +76,10 @@ function gotPoses(results)
         rightWristY = results[0].pose.rightWrist.y;
         console.log("rightWristX ="+rightWristX+"rightWristY ="+rightWristY);
     }
+}
+function loadSound()
+{
+    console.log("loadSound");
 }
 
 
